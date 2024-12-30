@@ -78,9 +78,35 @@ class VideoPlayer {
   /// to react to them / expose them through the [VideoPlayer.events] stream.
   Future<void> initialize() async {
     _videoElement
-      ..autoplay = false
+      ..src = uri
+      ..autoplay = true
       ..controls = false
-      ..playsInline = true;
+      ..style.border = 'none'
+      ..style.height = 'auto'
+      ..style.zIndex = '100'
+      ..style.position = 'absolute'
+      ..style.top = '50%'
+      ..style.left = '50%'
+      ..style.minWidth = '100%'
+      ..style.minHeight = '100%'
+      ..style.setProperty('object-fit', 'fill')
+      ..style.setProperty('-ms-transform', 'translateX(-50%) translateY(-50%)')
+      ..style.setProperty('-webkit-transform', 'translateX(-50%) translateY(-50%)')
+      ..style.setProperty('transform', 'translateX(-50%) translateY(-50%)')
+      ..style.width = '100%';
+
+    _videoElement.setAttribute('id', 'videoPlayer');
+    _videoElement.setAttribute('x5-video-player-type', 'h5');
+    _videoElement.setAttribute('preload', 'meta');
+    _videoElement.setAttribute('muted','true');
+    _videoElement.setAttribute('autoplay','true');
+    _videoElement.setAttribute('x5-video-player-fullscreen', 'true');
+    _videoElement.setAttribute('x-webkit-airplay', 'allow');
+    _videoElement.setAttribute('webkit-playsinline', 'true');
+    _videoElement.setAttribute('playsinline', 'true');
+    // _videoElement.setAttribute('controls', 'controls');
+    _videoElement.setAttribute('x5-video-orientation', 'portraint');
+    
 
     if (_hlsFallback == true || await shouldUseHlsLibrary()) {
       _hlsFallback = false;
