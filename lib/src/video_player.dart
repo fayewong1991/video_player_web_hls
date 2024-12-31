@@ -104,7 +104,7 @@ class VideoPlayer {
     _videoElement.setAttribute('x-webkit-airplay', 'allow');
     _videoElement.setAttribute('webkit-playsinline', 'true');
     _videoElement.setAttribute('playsinline', 'true');
-    _videoElement.setAttribute('controls', 'controls');
+    // _videoElement.setAttribute('controls', 'controls');
     _videoElement.setAttribute('x5-video-orientation', 'portraint');
     
 
@@ -152,7 +152,6 @@ class VideoPlayer {
               }
             }.toJS);
         _eventsSubscriptions.add(_videoElement.onCanPlay.listen((dynamic _) {
-          play();
           _onVideoElementInitialization(_);
           setBuffering(false);
         }));
