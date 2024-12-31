@@ -96,7 +96,7 @@ class VideoPlayer {
       ..style.width = '100%';
 
     _videoElement.setAttribute('id', 'videoPlayer');
-    _videoElement.setAttribute('x5-video-player-type', 'h5');
+    _videoElement.setAttribute('x5-video-player-type', 'h5-page');
     _videoElement.setAttribute('preload', 'meta');
     _videoElement.setAttribute('muted','true');
     _videoElement.setAttribute('autoplay','true');
@@ -104,7 +104,7 @@ class VideoPlayer {
     _videoElement.setAttribute('x-webkit-airplay', 'allow');
     _videoElement.setAttribute('webkit-playsinline', 'true');
     _videoElement.setAttribute('playsinline', 'true');
-    // _videoElement.setAttribute('controls', 'controls');
+    _videoElement.setAttribute('controls', 'controls');
     _videoElement.setAttribute('x5-video-orientation', 'portraint');
     
 
@@ -152,7 +152,8 @@ class VideoPlayer {
               }
             }.toJS);
         _eventsSubscriptions.add(_videoElement.onCanPlay.listen((dynamic _) {
-          _onVideoElementInitialization(_) ;
+          play();
+          _onVideoElementInitialization(_);
           setBuffering(false);
         }));
       } catch (e) {
@@ -171,7 +172,9 @@ class VideoPlayer {
     }
 
     // Needed for Safari iOS 17, which may not send `canplay`.
-    _videoElement.onLoadedMetadata.listen(_onVideoElementInitialization);
+    _videoElement.onLoadedMetadata.listen((dynamic _) {
+      _onVideoElementInitialization(_);
+    });
 
     _eventsSubscriptions.add(_videoElement.onCanPlayThrough.listen((dynamic _) {
       setBuffering(false);
@@ -226,6 +229,11 @@ class VideoPlayer {
   /// When called from some user interaction (a tap on a button), the above
   /// limitation should disappear.
   Future<void> play() {
+    print('play');
+    _eventController.add(VideoEvent(
+      eventType: VideoEventType.isPlayingStateUpdate,
+      isPlaying: true
+    ));
     return _videoElement.play().toDart.catchError((Object e) {
       // play() attempts to begin playback of the media. It returns
       // a Promise which can get rejected in case of failure to begin
@@ -243,6 +251,10 @@ class VideoPlayer {
 
   /// Pauses the video in the current position.
   void pause() {
+    _eventController.add(VideoEvent(
+      eventType: VideoEventType.isPlayingStateUpdate,
+      isPlaying: false
+    ));
     _videoElement.pause();
   }
 
@@ -387,6 +399,7 @@ class VideoPlayer {
   }
 
   bool canPlayHlsNatively() {
+   
     bool canPlayHls = false;
     try {
       final String canPlayType =
